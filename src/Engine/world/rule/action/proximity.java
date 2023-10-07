@@ -68,7 +68,7 @@ public class proximity extends action {
     }
 
     public String getEnvDepth(){
-        return envDepth.getValue().toString();
+        return envDepth.getFullValue().toString();
     }
 
     public String getSourceName(){
@@ -81,10 +81,10 @@ public class proximity extends action {
 
     private void checkEntityAndPropertyExist(){
         if(!m_util.isEntityDifenichanExists(sourceName)){
-            throw new OBJECT_NOT_EXIST("In action set the entity " + sourceName + " does not exist.");
+            throw new OBJECT_NOT_EXIST("In action proximity the entity " + sourceName + " does not exist.");
         }
         if(!m_util.isEntityDifenichanExists(targetName)){
-            throw new OBJECT_NOT_EXIST("In action set the entity " + targetName + " does not exist.");
+            throw new OBJECT_NOT_EXIST("In action proximity the entity " + targetName + " does not exist.");
         }
         if(getCountForSecondaryEntities() != 0 && !m_util.isEntityDifenichanExists(getSecondaryName())){
             throw new OBJECT_NOT_EXIST("In action " + getActionName() + " the entity " + getSecondaryName() + " does not exist.");

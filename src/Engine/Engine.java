@@ -459,9 +459,9 @@ public class Engine {
         }
     }
 
-    public void bindToWhenFines(BooleanProperty isFines){
-        cuurentSimuletion.bindToWhenFines(isFines);
-    }
+//    public void bindToWhenFines(BooleanProperty isFines){
+//        cuurentSimuletion.bindToWhenFines(isFines);
+//    }
 
     public List<DTOEnvironmentVariablesValues> _prepareSimulation(Integer requestId, String userName, Map<String, String> environmentsValues, Map<String, Integer> entitiesPopulation) throws NoSuchFileException, UnsupportedFileTypeException, InvalidValue, allReadyExistsException , JAXBException, FileNotFoundException,  InvalidValue, ReferenceNotInitializedException{
 //        if(approvementManager.containsKey(userName) || approvementManager.get(userName).containsKey(simulationName) || !approvementManager.get(userName).get(simulationName).getStatus().equals(approvementStatus.APPROVED)){

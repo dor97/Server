@@ -1,8 +1,7 @@
 package Server;
 
 
-import DTO.DTOException;
-import DTO.DTOPrepareSimulationData;
+import DTO.*;
 import Engine.Engine;
 import com.google.gson.Gson;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,6 +23,11 @@ public class prepareSimulation extends HttpServlet {
 
         BufferedReader reader = request.getReader();
 
+//        DTORequestsApproval requestsApproval = new DTORequestsApproval(0, "");
+//
+//        DTORunningSimulationDetails runningSimulationDetails = new DTORunningSimulationDetails();
+//        DTOResultOfPrepareSimulation resultOfPrepareSimulation = new DTOResultOfPrepareSimulation();
+
         Gson gson = new Gson();
         DTOPrepareSimulationData prepareSimulationData = gson.fromJson(reader, DTOPrepareSimulationData.class);
 
@@ -36,14 +40,16 @@ public class prepareSimulation extends HttpServlet {
 //            requestBody.append(line);
 //            strings.add(line);
 //        }
-        DTOException exception = new DTOException();
+        //DTOUserName userName = new DTOUserName();
+        //DTOException exception = new DTOException();
+        DTOResultOfPrepareSimulation resultOfPrepareSimulation = new DTOResultOfPrepareSimulation();
         try {
-            engine._prepareSimulation(prepareSimulationData.getRequestId(), prepareSimulationData.getUserName(), prepareSimulationData.getEnvironmentsValues(), prepareSimulationData.getEntitiesPopulation());
+            resultOfPrepareSimulation.setEnvironmentVariablesValuesList(engine._prepareSimulation(prepareSimulationData.getRequestId(), prepareSimulationData.getUserName(), prepareSimulationData.getEnvironmentsValues(), prepareSimulationData.getEntitiesPopulation()));
         }catch (Exception e){
-            exception.setException(e.getMessage());
+            resultOfPrepareSimulation.getException().setException(e.getMessage());
         }
 
-        String jsonRes = gson.toJson(exception);
+        String jsonRes = gson.toJson(resultOfPrepareSimulation);
         response.getWriter().write(jsonRes);
     }
 }

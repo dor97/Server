@@ -72,7 +72,7 @@ public class addValue extends action implements Serializable {  //increase or de
     }
 
     public String getBy(){
-        return m_by.getValue().toString();
+        return m_by.getFullValue().toString();
     }
 
     public String getType(){

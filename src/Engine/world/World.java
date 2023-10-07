@@ -54,7 +54,7 @@ public class World implements Serializable {
     private String userName;
     private Integer numSimulation = 0;
     private Boolean isSimulationEnded = false;
-    private javafx.beans.property.BooleanProperty isFines = new SimpleBooleanProperty();
+    //private javafx.beans.property.BooleanProperty isFines = new SimpleBooleanProperty();
     private map map;
     private String exception = "";
     private String simulationName = "";
@@ -68,7 +68,7 @@ public class World implements Serializable {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "Engine.generated";
 
     public World(Integer requestId){
-        isFines.set(false);
+        //isFines.set(false);
         this.requestId = requestId;
     }
 
@@ -80,7 +80,7 @@ public class World implements Serializable {
     }
 
     public void setSimulationEnded(){
-        Platform.runLater(() -> isFines.set(true));
+        //Platform.runLater(() -> isFines.set(true));
         isSimulationEnded = true;
     }
 
@@ -211,7 +211,7 @@ public class World implements Serializable {
 
             if(sleep != null && sleep != 0){
                 startSleepTime = Instant.now();
-                while (Duration.between(startSleepTime, Instant.now()).getSeconds() < sleep){
+                while (Duration.between(startSleepTime, Instant.now()).toMillis() < sleep){
                     elapsedTime = Duration.between(start, Instant.now());
 //                    try {     //TODO to add?
 //                        Thread.sleep(400);
@@ -237,8 +237,9 @@ public class World implements Serializable {
                         System.out.println("resume");
                     } catch (InterruptedException e) {
                         System.out.println("leave");
+                        m_entities.stream().forEach(entity -> entity.getProperties().values().stream().forEach(propertyInterface -> {propertyInterface.addDeltaTicksChanged(currTick);consistencyAndAvr.add(new consistencyAndAvr(entity.getName() + "_" + propertyInterface.getName(), propertyInterface.getDeltaTicksChangedValueAve(), propertyInterface.getValue()));}));
                         isSimulationEnded = true;
-                        Platform.runLater(() -> isFines.set(true));
+                        //Platform.runLater(() -> isFines.set(true));
                         isPause.setPause(false);
                         return;
                         // Handle interruption if needed
@@ -248,14 +249,15 @@ public class World implements Serializable {
             if(Thread.currentThread().isInterrupted()){
                 System.out.println("leave");
                 isSimulationEnded = true;
-                Platform.runLater(() -> isFines.set(true));
+                m_entities.stream().forEach(entity -> entity.getProperties().values().stream().forEach(propertyInterface -> {propertyInterface.addDeltaTicksChanged(currTick);consistencyAndAvr.add(new consistencyAndAvr(entity.getName() + "_" + propertyInterface.getName(), propertyInterface.getDeltaTicksChangedValueAve(), propertyInterface.getValue()));}));
+                //Platform.runLater(() -> isFines.set(true));
                 return;
             }
             //aTask.run();
             //Thread.currentThread().isInterrupted();
         }
         m_entities.stream().forEach(entity -> entity.getProperties().values().stream().forEach(propertyInterface -> {propertyInterface.addDeltaTicksChanged(currTick);consistencyAndAvr.add(new consistencyAndAvr(entity.getName() + "_" + propertyInterface.getName(), propertyInterface.getDeltaTicksChangedValueAve(), propertyInterface.getValue()));}));
-        Platform.runLater(() -> isFines.set(true));
+        //Platform.runLater(() -> isFines.set(true));
         isSimulationEnded = true;
     }
 
@@ -627,9 +629,9 @@ public class World implements Serializable {
         }
     }
 
-    public void bindToWhenFines(javafx.beans.property.BooleanProperty isFines){
-        isFines.bind(this.isFines);
-    }
+    //public void bindToWhenFines(javafx.beans.property.BooleanProperty isFines){
+//        isFines.bind(this.isFines);
+//    }
 
     public void addEnvironmentDto(DTOEnvironmentVariables dtoEnvironmentVariables) throws InvalidValue{
         if(m_environmentsDifenichen.containsKey(dtoEnvironmentVariables.getVariableName())){

@@ -112,6 +112,21 @@ public class expression implements Serializable {
         }
     }
 
+    public Object getFullValue(){
+        switch (m_type){
+            case INT:
+                return valueInt;
+            case FLOAT:
+                return valueFloat;
+            case STRING:
+                return this.toString();
+            case BOOL:
+                return valueBool;
+            default:
+                return null;
+        }
+    }
+
     public int getInt(){
         return valueInt;
     }

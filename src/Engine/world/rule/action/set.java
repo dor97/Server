@@ -59,7 +59,7 @@ public class set extends action implements Serializable {
     }
 
     public String getValue(){
-        return m_value.getValue().toString();
+        return m_value.getFullValue().toString();
     }
     @Override
     public String getEntity(){
