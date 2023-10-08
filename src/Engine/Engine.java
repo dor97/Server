@@ -43,6 +43,7 @@ public class Engine {
     private Map<Integer, simulationApprovementManager> approvManager = new HashMap<>();
     private Map<String, World> userCurrentSimulation= new HashMap<>();
     private Integer IDToRunSimulation = 0;
+    private List<Integer> allSimulationIdInSystem = new ArrayList<>();
 
     public final List<String> _getWorldDifenichanCollecen(Integer index){
         synchronized (worldDifenichanCollecenNames) {
@@ -56,6 +57,12 @@ public class Engine {
                 //return null;
             }
             return worldDifenichanCollecen.get(name).getRunningCounter();
+        }
+    }
+
+    public List<Integer> getAllSimulationIdInSystem(Integer index){
+        synchronized (allSimulationIdInSystem){
+            return allSimulationIdInSystem.stream().skip(index).collect(Collectors.toList());
         }
     }
 
@@ -580,6 +587,9 @@ public class Engine {
         temp.setSimulationId(simulationNum);
         //temp.setTask(aTask);
         temp.setWorld(world);
+        synchronized (allSimulationIdInSystem){
+            allSimulationIdInSystem.add(simulationNum);
+        }
         synchronized (simStatus) {
             simStatus.put(simulationNum, temp);
         }
