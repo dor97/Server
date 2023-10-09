@@ -45,6 +45,16 @@ public class Engine {
     private Integer IDToRunSimulation = 0;
     private List<Integer> allSimulationIdInSystem = new ArrayList<>();
 
+    public DTOPostRunPrepareSimulationData getSimulationPrepareData(Integer simulationId){
+        if(!simStatus.containsKey(simulationId)){
+            throw new DTO.InvalidValue("simulation id does not exist");
+        }
+        DTOPostRunPrepareSimulationData postRunPrepareSimulationData = new DTOPostRunPrepareSimulationData();
+        postRunPrepareSimulationData.setEntitiesPopulation(simStatus.get(simulationId).getWorld().getEntityDefinitionDetails());
+        postRunPrepareSimulationData.setEnvironmentsValues(simStatus.get(simulationId).getWorld().getEnvironmentVariablesDefinitionDetails());
+        return postRunPrepareSimulationData;
+    }
+
     public final List<String> _getWorldDifenichanCollecen(Integer index){
         synchronized (worldDifenichanCollecenNames) {
             return worldDifenichanCollecenNames.stream().skip(index).collect(Collectors.toList());
@@ -844,10 +854,13 @@ public class Engine {
         if(!simStatus.containsKey(id)){
             throw new DTO.InvalidValue("simulation id does not exist");
         }
-        synchronized (simStatus.get(id)){
-            //return simStatus.get(id).getWorld().getRunningSimulationDTO();
-            return simStatus.get(id).getWorld().getSimulationRunningDetailsDTO();
-        }
+        return simStatus.get(id).getWorld().getSimulationRunningDetailsDTO();
+
+
+//        synchronized (simStatus.get(id)){
+//            //return simStatus.get(id).getWorld().getRunningSimulationDTO();
+//            return simStatus.get(id).getWorld().getSimulationRunningDetailsDTO();
+//        }
     }
 
     public Boolean isSimulationRunning(Integer id){

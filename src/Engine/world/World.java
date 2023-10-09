@@ -132,6 +132,15 @@ public class World implements Serializable {
 //
 //        return runningSimulationDetails;
     }
+
+    public Map<String, Integer> getEntityDefinitionDetails(){
+        return m_entitiesDifenichan.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getPopulation()));
+    }
+
+    public Map<String, String> getEnvironmentVariablesDefinitionDetails(){
+        return m_environmentsDifenichen.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getInit().getValue().toString()));
+    }
+
     public void startSimolesan(isPause isPause)throws InvalidValue{
         //Utilites.Init(m_environments, m_entitiesDifenichan);
         List<Entity> toRemove = new ArrayList<>();
@@ -176,8 +185,8 @@ public class World implements Serializable {
         map = new map(m_rows, m_cols);  //TODO change
         map.setLocations(m_entities);
         List<ActionInterface> toActive = new ArrayList<>();
+        elapsedTime = Duration.between(start, Instant.now());
         while ((ticks == null || currTick < ticks) && (secondToWork == null || Duration.between(start, Instant.now()).getSeconds() < secondToWork)) {  //&& currTick < 1000
-            elapsedTime = Duration.between(start, Instant.now());
             if(currTick % 1000 == 0) {
                 numOfEntitiesPerTick.add(new Pair<>(currTick, m_entities.size()));
             }
@@ -190,38 +199,55 @@ public class World implements Serializable {
             Map<String, List<Entity>> killAndCreat = new HashMap<>();
             killAndCreat.put("kill", new ArrayList<>());
             killAndCreat.put("creat", new ArrayList<>());
-            synchronized(m_entities) {
-                m_entities.stream().forEach(entity -> toActive.stream().forEach(actionInterface -> (activeatActian(entity, actionInterface)).forEach((key, value) -> killAndCreat.merge(key, value, (list1, list2) -> {
-                    list1.addAll(list2);
-                    return list1;
-                }))));
 
-                map.moveEntities(m_entities);
-                //killAndCreat.forEach((key, value) -> killCreat(key, value));
-                map.deleteEntities(killAndCreat.get("kill"));
-                map.createEntities(killAndCreat.get("creat"));
-                killAndCreat.get("kill").stream().forEach(kill -> kill.getProperties().values().stream().forEach(propertyInterface -> {propertyInterface.addDeltaTicksChanged(currTick);consistencyAndAvr.add(new consistencyAndAvr(kill.getName() + "_" + propertyInterface.getName(), propertyInterface.getDeltaTicksChangedValueAve(), propertyInterface.getValue()));}));
+            m_entities.stream().forEach(entity -> toActive.stream().forEach(actionInterface -> (activeatActian(entity, actionInterface)).forEach((key, value) -> killAndCreat.merge(key, value, (list1, list2) -> {
+                list1.addAll(list2);
+                return list1;
+            }))));
+
+            map.moveEntities(m_entities);
+            //killAndCreat.forEach((key, value) -> killCreat(key, value));
+            map.deleteEntities(killAndCreat.get("kill"));
+            map.createEntities(killAndCreat.get("creat"));
+            killAndCreat.get("kill").stream().forEach(kill -> kill.getProperties().values().stream().forEach(propertyInterface -> {propertyInterface.addDeltaTicksChanged(currTick);consistencyAndAvr.add(new consistencyAndAvr(kill.getName() + "_" + propertyInterface.getName(), propertyInterface.getDeltaTicksChangedValueAve(), propertyInterface.getValue()));}));
+            synchronized (m_entities) {
                 m_entities.removeAll(killAndCreat.get("kill"));
                 m_entities.addAll(killAndCreat.get("creat"));
             }
 
             synchronized (start) {
                 currTick++;
+                elapsedTime = Duration.between(start, Instant.now());
             }
 
             if(sleep != null && sleep != 0){
-                startSleepTime = Instant.now();
-                while (Duration.between(startSleepTime, Instant.now()).toMillis() < sleep){
-                    elapsedTime = Duration.between(start, Instant.now());
-//                    try {     //TODO to add?
-//                        Thread.sleep(400);
-//                    }catch (InterruptedException e){
-//                        isSimulationEnded = true;
-//                        Platform.runLater(() -> isFines.set(true));
-//                        isPause.setPause(false);
-//                        return;
-//                    }
+                try{
+                    Thread.sleep(sleep);
+                }catch (Exception e){
+                    System.out.println("leave");
+                    m_entities.stream().forEach(entity -> entity.getProperties().values().stream().forEach(propertyInterface -> {propertyInterface.addDeltaTicksChanged(currTick);consistencyAndAvr.add(new consistencyAndAvr(entity.getName() + "_" + propertyInterface.getName(), propertyInterface.getDeltaTicksChangedValueAve(), propertyInterface.getValue()));}));
+                    isSimulationEnded = true;
+                    //Platform.runLater(() -> isFines.set(true));
+                    isPause.setPause(false);
+                    return;
                 }
+                synchronized (start){
+                    elapsedTime = Duration.between(start, Instant.now());
+
+                }
+
+//                startSleepTime = Instant.now();
+//                while (Duration.between(startSleepTime, Instant.now()).toMillis() < sleep){
+//                    elapsedTime = Duration.between(start, Instant.now());
+////                    try {     //TODO to add?
+////                        Thread.sleep(400);
+////                    }catch (InterruptedException e){
+////                        isSimulationEnded = true;
+////                        Platform.runLater(() -> isFines.set(true));
+////                        isPause.setPause(false);
+////                        return;
+////                    }
+//                }
             }
 //            aTask.func(m_entities.stream().collect(Collectors.groupingBy(Entity::getName, Collectors.summingInt(e -> 1))));
 //            aTask.setTick(currTick);
@@ -231,7 +257,9 @@ public class World implements Serializable {
                     System.out.println("pause");
                     try {
                         isPause.notifyAll();
-                        elapsedTime = Duration.between(start, Instant.now());
+                        synchronized (start) {
+                            elapsedTime = Duration.between(start, Instant.now());
+                        }
                         isPause.wait();
                         start = Instant.now().minus(elapsedTime);
                         System.out.println("resume");
