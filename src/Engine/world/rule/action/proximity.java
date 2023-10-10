@@ -29,6 +29,17 @@ public class proximity extends action {
         //envDepth = action.getPRDEnvDepth().getOf().equals("1") ? 1 : 2;
         envDepth = new expressionWithFunc(util);
         envDepth.convertValueInString(action.getPRDEnvDepth().getOf());
+        if(envDepth.getType().equals(expressionType.INT)){
+            if(envDepth.getInt() < 0){
+                throw new InvalidValue("In action proximity envDepth can't be negative");
+            }
+        }
+        if(envDepth.getType().equals(expressionType.FLOAT)){
+            if(envDepth.getFloat() < 0){
+                throw new InvalidValue("In action proximity envDepth can't be negative");
+            }
+        }
+
         m_util = util;
 //        action.getPRDActions().getPRDAction();
 
