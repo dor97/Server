@@ -16,9 +16,7 @@ import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class Engine {
@@ -26,7 +24,8 @@ public class Engine {
     private World cuurentSimuletion;
     private Integer simulationNum = 0;
     private int numOfThreads = 1;
-    private ExecutorService threadPool = Executors.newFixedThreadPool(3);
+    //private ExecutorService threadPool = Executors.newFixedThreadPool(3);
+    private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(1, 1, 0 , TimeUnit.SECONDS, new LinkedBlockingQueue<>());
     private Integer poolSize = 0;
     private String m_fileName = null;
     private Boolean isFileLoadedInSimulation = false;
@@ -205,8 +204,13 @@ public class Engine {
             threadPool.shutdownNow();
         }
 
-        threadPool = Executors.newFixedThreadPool(numberOFThreads);
+        threadPool = new ThreadPoolExecutor(numberOFThreads, numberOFThreads, 0 , TimeUnit.SECONDS, new LinkedBlockingQueue<>());
         isTreadPoolShoutDown = false;
+    }
+
+    public void setThreadPoolSize(Integer size){
+        threadPool.setMaximumPoolSize(size);
+        threadPool.setCorePoolSize(size);
     }
 
     public void _loadSimulationDefinition(InputStream inputStream) throws NoSuchFileException, UnsupportedFileTypeException, InvalidValue, allReadyExistsException , JAXBException, FileNotFoundException {
@@ -269,7 +273,7 @@ public class Engine {
         synchronized (newlyFinishedSimulationIds){
             newlyFinishedSimulationIds.clear(); //TODO maybe not (i.e delete this line)
         }
-        threadPool = Executors.newFixedThreadPool(numOfThreads);
+        threadPool = new ThreadPoolExecutor(numOfThreads, numOfThreads, 0 , TimeUnit.SECONDS, new LinkedBlockingQueue<>());
         isTreadPoolShoutDown = false;
     }
 
