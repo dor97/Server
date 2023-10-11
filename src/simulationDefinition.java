@@ -58,10 +58,9 @@ public class simulationDefinition extends HttpServlet {
         }catch (Exception e){
             exception.setException(e.getMessage());
         }
-        finally {
-            Gson gson = new Gson();
-            String jsonRes = gson.toJson(exception);
-            response.getWriter().write(jsonRes);
-        }
+        Gson gson = new Gson();
+        String jsonRes = gson.toJson(exception);
+        response.getWriter().write(jsonRes);
+
     }
 }
