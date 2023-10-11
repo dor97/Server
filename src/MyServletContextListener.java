@@ -11,6 +11,7 @@ public class MyServletContextListener implements ServletContextListener {
         ServletContext servletContext = servletContextEvent.getServletContext();
         Engine engine = new Engine();
         servletContext.setAttribute("engine", engine);
+        servletContext.setAttribute("isThereAdmin", false);
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
