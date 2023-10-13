@@ -41,7 +41,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../DTO/out/artifacts/DTO/DTO.jar!/" />
+          <root url="jar://$MODULE_DIR$/../DTO/out/artifacts/DTOs/DTOs.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

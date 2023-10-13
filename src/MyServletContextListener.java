@@ -4,6 +4,10 @@ import jakarta.servlet.ServletContextListener;
 import Engine.Engine;
 import jakarta.servlet.annotation.WebListener;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 
 @WebListener
 public class MyServletContextListener implements ServletContextListener {
@@ -12,6 +16,7 @@ public class MyServletContextListener implements ServletContextListener {
         Engine engine = new Engine();
         servletContext.setAttribute("engine", engine);
         servletContext.setAttribute("isThereAdmin", false);
+        servletContext.setAttribute("users", new HashSet<String>());
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
