@@ -138,7 +138,7 @@ public class World implements Serializable {
     }
 
     public Map<String, String> getEnvironmentVariablesDefinitionDetails(){
-        return m_environmentsDifenichen.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getInit().getValue().toString()));
+        return m_environments.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getValue().toString()));
     }
 
     public void startSimolesan(isPause isPause)throws InvalidValue{

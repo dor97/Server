@@ -210,6 +210,9 @@ public class proximity extends action {
         }else {
             throw new InvalidValue("In action proximity got wrong depth param");
         }
+        if(depth < 0){
+            throw new InvalidValue("In action proximity envDepth can't be negative");
+        }
         if(depth > Math.max(m_util.getMapColSize(), m_util.getMapRowSize())){
             depth = Math.max(m_util.getMapColSize(), m_util.getMapRowSize());
         }
