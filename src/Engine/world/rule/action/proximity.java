@@ -210,6 +210,9 @@ public class proximity extends action {
         }else {
             throw new InvalidValue("In action proximity got wrong depth param");
         }
+        if(depth > Math.max(m_util.getMapColSize(), m_util.getMapRowSize())){
+            depth = Math.max(m_util.getMapColSize(), m_util.getMapRowSize());
+        }
         for (int i = -1 * depth; i <= 1 * depth; i++) {
             for (int j = -1 * depth; j <= 1 * depth; j++) {
                 if (entity.getPosition().getX() == getX(targetEntity.getPosition().getX() + i) && entity.getPosition().getY() == getY(targetEntity.getPosition().getY() + j)) {
